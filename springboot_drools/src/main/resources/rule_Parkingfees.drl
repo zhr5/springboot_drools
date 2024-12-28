@@ -1,0 +1,86 @@
+//当前规则文件用于计算停车场收费
+package parkingcalculation
+import com.parking.entity.ParkingCalculation
+
+//计算停车费用
+rule "parking_setDuration"
+    salience 100
+    //设置生效日期
+    date-effective "2023-01-01"
+    no-loop true
+    when
+        $park: ParkingCalculation(duration > 0)
+    then
+        double durationToCharge = $park.getDuration() - 1;
+        if (durationToCharge < 0) {
+            durationToCharge = 0;
+        }
+        $park.setDurationToCharge(durationToCharge);
+        update($park);
+end
+
+//设置1-2小时停车费
+rule "parking_1_2_hours"
+    salience 90
+    no-loop true
+    activation-group "SETFee_Group"
+    when
+        $park: ParkingCalculation(durationToCharge <= 1)
+    then
+        $park.setFee(5);
+        update($park);
+end
+
+//设置2-3小时停车费
+rule "parking_2_3_hours"
+    salience 90
+    no-loop true
+    activation-group "SETFee_Group"
+    when
+        $park: ParkingCalculation(durationToCharge > 1 && durationToCharge <= 2)
+    then
+        $park.setFee(10);
+        update($park);
+end
+
+//设置3-4小时停车费
+rule "parking_3_4_hours"
+    salience 90
+    no-loop true
+    activation-group "SETFee_Group"
+    when
+        $park: ParkingCalculation(durationToCharge > 2 && durationToCharge <= 3)
+    then
+        $park.setFee(15);
+        update($park);
+end
+
+//设置4小时以上停车费
+rule "parking_over_4_hours"
+    salience 90
+    no-loop true
+    activation-group "SETFee_Group"
+    when
+        $park: ParkingCalculation(durationToCharge > 3)
+    then
+        double fee = 15 + ($park.getDurationToCharge() - 3) * 5;
+        $park.setFee(fee);
+        update($park);
+end
+
+//计算总停车费并打印结果
+rule "parking_result"
+    salience 80
+    when
+        $park: ParkingCalculation(duration > 0 && fee > 0)
+    then
+        System.out.println("--停车时长：" + $park.getDuration() + " 小时");
+        System.out.println("--应计收费时长：" + $park.getDurationToCharge() + " 小时");
+        System.out.println("--停车费：" + $park.getFee() + " 元");
+end
+
+//1小时内免费。
+//1小时到2小时收费5元。
+//2小时到3小时收费10元。
+//3小时到4小时收费15元。
+//4小时以上的每小时收费5元。

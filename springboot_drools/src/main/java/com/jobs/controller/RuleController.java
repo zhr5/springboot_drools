@@ -3,9 +3,11 @@ package com.jobs.controller;
 import com.jobs.entity.Calculation;
 import com.jobs.service.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 @RestController
 @RequestMapping("/rule")
 public class RuleController {
@@ -13,11 +15,10 @@ public class RuleController {
     private RuleService ruleService;
 
     @RequestMapping("/calculate")
-    public Calculation calculate(String wage) {
-        Double wage1=Double.parseDouble(wage);
+    public Calculation calculate(double wage) {
         try {
             Calculation calculation = new Calculation();
-            calculation.setWage(wage1);
+            calculation.setWage(wage);
             calculation = ruleService.calculate(calculation);
             System.out.println(calculation);
             return calculation;
@@ -25,5 +26,13 @@ public class RuleController {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    @RequestMapping("/test")
+    public void test() {
+        ClassPathResource resource = new ClassPathResource("rule.drl");
+        System.out.println(resource.exists());
+        File file = new File("src\\/main\\/resources\\/rule.drl");
+        System.out.println(file.exists());
     }
 }
