@@ -51,4 +51,7 @@ public class RuleService {
         kieHelper.addContent(sb.toString(), ResourceType.DRL);
         return kieHelper.build().newKieSession();
     }
+
+    //调用Drools规则引擎实现任务中台的任务写入
+
 }

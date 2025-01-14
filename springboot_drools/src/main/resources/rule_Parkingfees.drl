@@ -1,6 +1,6 @@
 //当前规则文件用于计算停车场收费
 package parkingcalculation
-import com.parking.entity.ParkingCalculation
+import com.jobs.entity.ParkingCalculation
 
 //计算停车费用
 rule "parking_setDuration"
