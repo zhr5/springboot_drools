@@ -1,7 +1,7 @@
 //图书优惠规则
 package book.discount
 // 导入Order实体类
-import com.drools.Order
+import com.jobs.entity.Order
 
 //规则一：所购图书总价在100元以下的没有优惠
 rule "book_discount_1"
@@ -38,3 +38,11 @@ rule "book_discount_4"
         $order.setRealPrice($order.getOriginalPrice() - 100);
         System.out.println("成功匹配到规则四：所购图书总价在300元以上的优惠100元");
 end
+
+/*
+package	包名，只限于逻辑上的管理，同一个包名下的查询或者函数可以直接调用
+import	用于导入类或者静态方法
+global	全局变量
+function	自定义函数
+query	查询
+rule end	规则体*/
