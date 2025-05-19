@@ -1,3 +1,4 @@
+import com.example.drools.UserService;
 import com.jobs.entity.ComparisonOperatorEntity;
 import com.jobs.entity.Order;
 import com.jobs.entity.Student;
@@ -182,6 +183,25 @@ public class TestDrools {
         }
 //kieSession.fireAllRules();
         kieSession.dispose();
+
+    }
+
+    @Test
+    public void test9(){
+        KieServices kieServices = KieServices.Factory.get();
+        KieContainer kieClasspathContainer = kieServices.getKieClasspathContainer();
+        KieSession kieSession = kieClasspathContainer.newKieSession();
+
+//设置全局变量，名称和类型必须和规则文件中定义的全局变量名称对应
+        kieSession.setGlobal("userService",new UserService());
+        kieSession.setGlobal("count",5);
+        List list = new ArrayList();//size为0
+        kieSession.setGlobal("gList",list);
+
+        kieSession.fireAllRules();
+        kieSession.dispose();
+//因为在规则中为全局变量添加了两个元素，所以现在的size为2
+        System.out.println(list.size());
 
     }
 }
